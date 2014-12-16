@@ -3,6 +3,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,6 +27,7 @@ public class DallopolyWindow extends JFrame {
 	private JTextField nameField;
 	private JButton addPlayer;
 	private JButton playGame;
+	private JButton takeTurn;																						//v0.1.1 change
 	private JScrollPane gameTextPane;
 	private JTextArea gameText;
 	
@@ -64,6 +66,9 @@ public class DallopolyWindow extends JFrame {
 		playGame = new JButton("Play!");
 		playGame.addActionListener(new playGameListener());
 		playGame.setEnabled(false);
+		takeTurn = new JButton("Take Turn");																		//v0.1.1 change
+		takeTurn.addActionListener(new takeTurnListener());															//v0.1.1 change
+		takeTurn.setEnabled(false);																					//v0.1.1 change																//v0.1.1 change
 	}
 	
 	//Game Text Content
@@ -87,7 +92,8 @@ public class DallopolyWindow extends JFrame {
 		add(nameField);
 		add(addPlayer);
 		add(gameTextPane);
-		add(playGame);		
+		add(playGame);	
+		add(takeTurn);																								//v0.1.1 change
 	}
 	
 	public void increasePlayerCount() {
@@ -142,6 +148,7 @@ public class DallopolyWindow extends JFrame {
 		}
 	}
 	
+	//----------------------- v0.1.1 change ---------------------------
 	public class playGameListener implements ActionListener {
 		public void actionPerformed(ActionEvent actionEvent) {
 			//Disable buttons for adding and playing
@@ -149,15 +156,31 @@ public class DallopolyWindow extends JFrame {
 			addPlayer.setEnabled(false);
 			nameField.setEnabled(false);
 			playGame.setEnabled(false);
-			newGame.setEnabled(true);
+			takeTurn.setEnabled(true);
 			
-			//------------------------------------------
-			//field must be reset or game can be played
-			//with only one player
-			resetPlayerCount();
-			//------------------------------------------
-			
-			gameText.append("\n\n" + game.playGame());
+			gameText.append("\n\n");
 		}
 	}
+	//-----------------------------------------------------------------
+	
+	//----------------------- v0.1.1 change ---------------------------
+	public class takeTurnListener implements ActionListener {
+		public void actionPerformed(ActionEvent actionEvent) {
+			String turn = game.playGame();
+			gameText.append(turn);
+			
+			if(turn.contains("winner"))
+			{
+				takeTurn.setEnabled(false);
+				newGame.setEnabled(true);
+				//------------------------------------------
+				//field must be reset or game can be played
+				//with only one player
+				resetPlayerCount();
+				//------------------------------------------
+			}
+			
+		}
+	}
+	//-----------------------------------------------------------------
 }
