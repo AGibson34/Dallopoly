@@ -10,6 +10,9 @@ public class Dallopoly {
 	//set a flag that will change when the game ends 															(v0.1.1 change)
 	boolean gameOver = false;
 	
+	//Player turn counter (decides whose turn it is)															(v0.1.1 change)
+	private int turnCounter = 0;
+	
 	/**
 	 * Creates the Board, the Spinner, then the Players and puts the
 	 * players at the start Square.
@@ -33,74 +36,67 @@ public class Dallopoly {
 		//addPlayer("Horse");
 		//addPlayer("Iron");
 		
-		//If the game isn't over this method will play through an entire turn (until someone wins) 				(v0.1.1 change)
+		//If the game isn't over this method will play through a single player's turn 				(v0.1.1 change)
 		if(!gameOver) {
-			/* Loop through the ArrayList of players and send each player
-			 * the "takeTurn" message. After the player has moved compare
-			 * the player's new square to the boards lastSquare. If the
-			 * player is on the Board's last Square determine who
-			 * the winner is based on the money of each player
-			 */
-			for(int i = 0; i < players.size(); i++) {
-				gameInfo += players.get(i).takeTurn(theSpinner, theBoard);
+			gameInfo += players.get(turnCounter).takeTurn(theSpinner, theBoard);
+			
+			//Beautification text
+			if(turnCounter == players.size()-1)
+				gameInfo += "\n";
+			//-------------------
+			
+			if(players.get(turnCounter).getCurrentSquare().getLabel() == theBoard.getLastSquare().getLabel()) {
+				gameInfo += "\n"; //Beautification text
 				
-				//Beautification text
-				if(i == players.size()-1)
-					gameInfo += "\n";
-				//-------------------
 				
-				if(players.get(i).getCurrentSquare().getLabel() == theBoard.getLastSquare().getLabel()) {
-					gameInfo += "\n"; //Beautification text
-					
-					
-					/**************
-					 
-					  The following code is a for testing a tie scenario
-					 
-					  for(Player player: players) {
-					   	player.setMoney(1000);
-					  }
-					   
-					 **************/
-					
-					//Setup to check for win conditions
-					int amount = 0;
-					ArrayList<Player> winner = new ArrayList<Player>();
-					
-					//Check all players currently held amount of money to determine a winner
-					for(Player player: players) {
-						if(amount == player.getMoney()) {
-							winner.add(player); 
-						}
-						else if(amount < player.getMoney()) {
-							amount = player.getMoney();
-							winner.clear(); //Clear the ArrayList in case there is a tie
-							winner.add(player); //Set the current winner
-							player = players.get(i);
-						}
+				/**************
+				 
+				  The following code is a for testing a tie scenario
+				 
+				  for(Player player: players) {
+				   	player.setMoney(1000);
+				  }
+				   
+				 **************/
+				
+				//Setup to check for win conditions
+				int amount = 0;
+				ArrayList<Player> winner = new ArrayList<Player>();
+				
+				//Check all players currently held amount of money to determine a winner
+				for(Player player: players) {
+					if(amount == player.getMoney()) {
+						winner.add(player); 
 					}
-					
-					//Add each winner to the gameInfo String
-					if(winner.size() > 1) {
-						gameInfo += "There is a tie! The winners are:";
-						for(int j = 0; j < winner.size(); j++) {
-							gameInfo += " " + winner.get(j).getName();
-							
-							//Proper English grammar. If there are no additional winners the "and" will not be concatenated
-							if(j < winner.size()-1)
-								gameInfo += " and";
-						}
-						gameInfo += " with $ " + winner.get(0).getMoney();
+					else if(amount < player.getMoney()) {
+						amount = player.getMoney();
+						winner.clear(); //Clear the ArrayList in case there is a tie
+						winner.add(player); //Set the current winner
+						player = players.get(turnCounter);
 					}
-					else {
-						gameInfo += "The winner is " + winner.get(0).getName() + " with $" + winner.get(0).getMoney() + "!";
+				}
+				
+				//Add each winner to the gameInfo String
+				if(winner.size() > 1) {
+					gameInfo += "There is a tie! The winners are:";
+					for(int j = 0; j < winner.size(); j++) {
+						gameInfo += " " + winner.get(j).getName();
+						
+						//Proper English grammar. If there are no additional winners the "and" will not be concatenated
+						if(j < winner.size()-1)
+							gameInfo += " and";
 					}
-					
-					gameOver = true;
-					break;
-				}	
+					gameInfo += " with $ " + winner.get(0).getMoney();
+				}
+				else {
+					gameInfo += "The winner is " + winner.get(0).getName() + " with $" + winner.get(0).getMoney() + "!";
+				}
+				
+				gameOver = true;	
 			}
-		
+			
+			turnCounter = (turnCounter + 1) % (players.size());   //increase player turn counter
+			
 		}
 		
 		//System.out.println(gameInfo); // For Testing Purposes only
