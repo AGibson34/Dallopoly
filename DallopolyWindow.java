@@ -157,6 +157,8 @@ public class DallopolyWindow extends JFrame {
 			nameField.setEnabled(false);
 			playGame.setEnabled(false);
 			takeTurn.setEnabled(true);
+			
+			gameText.append("\n\n");
 		}
 	}
 	//-----------------------------------------------------------------
@@ -164,7 +166,7 @@ public class DallopolyWindow extends JFrame {
 	//----------------------- v0.1.1 change ---------------------------
 	public class takeTurnListener implements ActionListener {
 		public void actionPerformed(ActionEvent actionEvent) {
-			String turn = "\n\n" + game.playGame();
+			String turn = game.playGame();
 			gameText.append(turn);
 			
 			if(turn.contains("winner"))
