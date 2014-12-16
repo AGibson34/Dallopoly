@@ -7,6 +7,9 @@ public class Dallopoly {
 	private Spinner theSpinner;
 	private Board theBoard;
 	
+	//set a flag that will change when the game ends 															(v0.1.1 change)
+	boolean gameOver = false;
+	
 	/**
 	 * Creates the Board, the Spinner, then the Players and puts the
 	 * players at the start Square.
@@ -30,10 +33,8 @@ public class Dallopoly {
 		//addPlayer("Horse");
 		//addPlayer("Iron");
 		
-		//set a flag that will change when the game ends
-		boolean gameOver = false;
-		//Create an outer loop that exits when a player wins
-		while(!gameOver) {
+		//If the game isn't over this method will play through an entire turn (until someone wins) 				(v0.1.1 change)
+		if(!gameOver) {
 			/* Loop through the ArrayList of players and send each player
 			 * the "takeTurn" message. After the player has moved compare
 			 * the player's new square to the boards lastSquare. If the
@@ -53,12 +54,14 @@ public class Dallopoly {
 					
 					
 					/**************
-					 * The following code is a for testing a tie scenario
-					 *
-					 * for(Player player: players) {
-					 *  	player.setMoney(1000);
-					 *   }
-					 *************/
+					 
+					  The following code is a for testing a tie scenario
+					 
+					  for(Player player: players) {
+					   	player.setMoney(1000);
+					  }
+					   
+					 **************/
 					
 					//Setup to check for win conditions
 					int amount = 0;
@@ -84,7 +87,7 @@ public class Dallopoly {
 							gameInfo += " " + winner.get(j).getName();
 							
 							//Proper English grammar. If there are no additional winners the "and" will not be concatenated
-							if(j < winner.size())
+							if(j < winner.size()-1)
 								gameInfo += " and";
 						}
 						gameInfo += " with $ " + winner.get(0).getMoney();
